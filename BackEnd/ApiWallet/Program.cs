@@ -29,6 +29,8 @@ namespace ApiWallet
             
             //Servicios
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ICryptoYaApiCliente, CryptoYaApiClient>();
+            builder.Services.AddScoped<ITransactionService, TransactionService>();
 
             // Configuración jwt
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
