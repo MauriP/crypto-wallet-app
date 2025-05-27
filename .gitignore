@@ -1,0 +1,22 @@
+# ---- .NET ----
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+# ---- Node.js ----
+node_modules/
+dist/
+.env
+.env.local
+npm-debug.log*
+
+# ---- Sistema ----
+.DS_Store
+Thumbs.db
+
+# ---- Logs ----
+*.log
