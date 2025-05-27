@@ -7,5 +7,8 @@ namespace ApiWallet.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        [HttpGet]
+
+
     }
 }

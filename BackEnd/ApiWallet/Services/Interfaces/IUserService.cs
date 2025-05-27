@@ -1,6 +1,12 @@
-﻿namespace ApiWallet.Services.Interfaces
+﻿using ApiWallet.Models.DTos;
+using ApiWallet.Models.Entyties;
+
+namespace ApiWallet.Services.Interfaces
 {
-    public class IUserService
+    public interface IUserService
     {
+        public Task<User> RegisterUserAsync(UserRegisterDto userDto);
+        Task<string?> LoginUserAsync(UserLoginDto userDto);
+        Task<bool> UpdateUserAsync(int userId, UserUpdateDto userDto);
     }
 }
