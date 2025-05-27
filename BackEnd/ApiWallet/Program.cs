@@ -1,6 +1,10 @@
-
 using ApiWallet.Data;
+using ApiWallet.Services.Implemetaciones;
+using ApiWallet.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ApiWallet
 {
@@ -22,6 +26,36 @@ namespace ApiWallet
                     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
                 ));
 
+            
+            //Servicios
+            builder.Services.AddScoped<IUserService, UserService>();
+
+            // Configuración jwt
+            builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+
+            // Configurar autenticación JWT
+            var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -34,7 +68,7 @@ namespace ApiWallet
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseAuthentication();
 
             app.MapControllers();
 

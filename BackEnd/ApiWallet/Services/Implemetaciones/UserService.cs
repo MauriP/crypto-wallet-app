@@ -1,10 +1,14 @@
-﻿using ApiWallet.Data;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using ApiWallet.Data;
 using ApiWallet.Models.DTos;
 using ApiWallet.Models.Entyties;
 using ApiWallet.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ApiWallet.Services.Implemetaciones
 {
@@ -12,10 +16,12 @@ namespace ApiWallet.Services.Implemetaciones
     {
         private readonly WalletDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly JwtSettings _jwtSecretKey;
         public UserService(WalletDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+            _jwtSecretKey = configuration.GetSection("jwt").Get<JwtSettings>()!;
         }
 
         public async Task<User> RegisterUserAsync(UserRegisterDto userDto)
@@ -45,7 +51,26 @@ namespace ApiWallet.Services.Implemetaciones
             {
                 throw new Exception("Contraseña incorrecta");
             }
-            return user.PasswordHash;
+
+            // Crear claims (puedes agregar más)
+            var claims = new[]
+            {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim("UserId", user.Id.ToString())
+    };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecretKey.Key));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _jwtSecretKey.Issuer,
+                audience: _jwtSecretKey.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_jwtSecretKey.ExpiresInMinutes),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public async Task<bool> UpdateUserAsync(int userId, UserUpdateDto userDto)
