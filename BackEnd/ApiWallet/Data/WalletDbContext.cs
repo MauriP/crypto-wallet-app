@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ApiWallet.Models.DTos;
 using ApiWallet.Models.Entyties;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,11 @@ public partial class WalletDbContext : DbContext
     public WalletDbContext(DbContextOptions<WalletDbContext> options)
         : base(options)
     {
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+        optionsBuilder.EnableSensitiveDataLogging();
     }
 
     public virtual DbSet<CryptoPrice> CryptoPrices { get; set; }
@@ -26,7 +32,7 @@ public partial class WalletDbContext : DbContext
 
     public virtual DbSet<VWalletSummary> VWalletSummaries { get; set; }
 
-    public virtual DbSet<WalletStatus> WalletStatuses { get; set; }
+    public DbSet<WalletStatusDto> WalletStatusDto { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

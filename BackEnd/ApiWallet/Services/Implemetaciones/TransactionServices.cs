@@ -117,8 +117,8 @@ namespace ApiWallet.Services.Implemetaciones
 
         public async Task<IEnumerable<WalletStatusDto>> GetWalletStatusAsync(int userId)
         {
-            var walletStatus = await _context.WalletStatuses
-                .FromSqlRaw("SELECT * FROM wallet_status WHERE user_id = {0}", userId)
+            var walletStatus = await _context.WalletStatusDto
+                .FromSqlRaw("SELECT user_id AS UserId, crypto_code AS CryptoCode, crypto_name AS CryptoName, total_amount AS TotalAmount FROM wallet_status WHERE user_id = {0}", userId)
                 .ToListAsync();
 
             var result = new List<WalletStatusDto>();
@@ -143,7 +143,7 @@ namespace ApiWallet.Services.Implemetaciones
         public async Task<decimal> GetCryptoBalance(int userId, string cryptoCode)
         {
             return await _context.Database
-                .SqlQuery<decimal>($"SELECT get_crypto_balance({userId}, {cryptoCode})")
+                .SqlQuery<decimal>($"SELECT get_crypto_balance({userId}, '{cryptoCode}') AS Value")
                 .FirstOrDefaultAsync();
         }
     }

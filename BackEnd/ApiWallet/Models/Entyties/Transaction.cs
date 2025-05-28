@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApiWallet.Models.Entyties;
 
@@ -15,6 +16,7 @@ public partial class Transaction
 
     public string Action { get; set; } = null!;
 
+    [Column("crypto_amount")]
     public decimal CryptoAmount { get; set; }
 
     public decimal Money { get; set; }

@@ -31,6 +31,7 @@ namespace ApiWallet
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICryptoYaApiCliente, CryptoYaApiClient>();
             builder.Services.AddScoped<ITransactionService, TransactionService>();
+            builder.Services.AddScoped<IBalanceService, BalanceService>();
 
             // Configuración jwt
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
@@ -56,7 +57,7 @@ namespace ApiWallet
                     ClockSkew = TimeSpan.Zero
                 };
             });
-
+            builder.Services.AddHttpClient();
 
             var app = builder.Build();
 

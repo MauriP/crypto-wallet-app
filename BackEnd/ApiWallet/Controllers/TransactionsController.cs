@@ -25,7 +25,11 @@ namespace ApiWallet.Controllers
             try
             {
                 var transaction = await _transactionService.CreateTransactionAsync(request);
-                return CreatedAtAction(nameof(GetUserTransactions), new { userId = transaction.UserId }, transaction);
+                return Ok(new
+                {
+                    message = "Transacción creada exitosamente",
+                    transaction
+                });
             }
             catch (Exception ex)
             {

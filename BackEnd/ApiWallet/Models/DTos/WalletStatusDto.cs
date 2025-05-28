@@ -1,5 +1,8 @@
-﻿namespace ApiWallet.Models.DTos
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ApiWallet.Models.DTos
 {
+    [Keyless]
     public class WalletStatusDto
     {
         public string CryptoCode { get; set; }
