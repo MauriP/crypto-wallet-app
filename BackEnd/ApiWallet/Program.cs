@@ -25,13 +25,15 @@ namespace ApiWallet
                     builder.Configuration.GetConnectionString("DefaultConnection"),
                     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
                 ));
-
             
+
             //Servicios
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICryptoYaApiCliente, CryptoYaApiClient>();
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<IBalanceService, BalanceService>();
+            builder.Services.AddScoped<PriceUpdaterService>();
+            builder.Services.AddScoped<IUserPesosBalanceService, UserPesosBalanceService>();
 
             // Configuración jwt
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));

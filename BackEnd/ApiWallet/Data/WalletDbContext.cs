@@ -33,6 +33,7 @@ public partial class WalletDbContext : DbContext
     public virtual DbSet<VWalletSummary> VWalletSummaries { get; set; }
 
     public DbSet<WalletStatusDto> WalletStatusDto { get; set; }
+    public DbSet<UserPesosBalance> UserPesosBalances { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -187,6 +188,15 @@ public partial class WalletDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("username");
         });
+
+        modelBuilder.Entity<UserPesosBalance>()
+       .HasKey(upb => upb.UserId);
+
+        modelBuilder.Entity<UserPesosBalance>()
+            .HasOne(upb => upb.User)
+            .WithOne() // O .WithOne(u => u.UserPesosBalance) si tienes la propiedad en User
+            .HasForeignKey<UserPesosBalance>(upb => upb.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<VTransactionHistory>(entity =>
         {

@@ -44,12 +44,31 @@ namespace ApiWallet.Controllers
         {
             try
             {
-                var transactions = await _transactionService.GetWalletStatusAsync(userId);
+                var transactions = await _transactionService.GetUserTransactionsAsync(userId);
                 return Ok(transactions);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error al obtener transacciones para usuario {userId}");
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // Datos de una transaccion específica
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTransactionById(int id)
+        {
+            try
+            {
+                var transaction = await _transactionService.GetTransactionByIdAsync(id);
+                if (transaction == null)
+                    return NotFound(new { message = "Transacción no encontrada" });
+
+                return Ok(transaction);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error al obtener transacción con id {id}");
                 return BadRequest(new { message = ex.Message });
             }
         }

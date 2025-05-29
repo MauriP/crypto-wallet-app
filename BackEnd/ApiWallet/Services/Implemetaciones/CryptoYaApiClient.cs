@@ -20,7 +20,7 @@ namespace ApiWallet.Services.Implemetaciones
             try
             {
                 var response = await _httpClient.GetFromJsonAsync<Dictionary<string, decimal>>($"{exchangeCode}/{cryptoCode}/ars");
-                return response["totalBid"];
+                return response["ask"];
             }
             catch (Exception ex)
             {
@@ -34,7 +34,7 @@ namespace ApiWallet.Services.Implemetaciones
             try
             {
                 var response = await _httpClient.GetFromJsonAsync<Dictionary<string, decimal>>($"{exchangeCode}/{cryptoCode}/ars");
-                return response["totalAsk"];
+                return response["bid"];
             }
             catch (Exception ex)
             {

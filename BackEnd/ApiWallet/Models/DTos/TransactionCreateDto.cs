@@ -6,7 +6,6 @@ public class TransactionCreateDto
     public int UserId { get; set; }
     [Required]
     public string CryptoCode { get; set; }
-    [Required]
     public string ExchangeCode { get; set; }
     [Required]
     [Range(0.00000001, double.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0")]
