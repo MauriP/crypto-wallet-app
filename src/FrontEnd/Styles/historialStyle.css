@@ -1,0 +1,120 @@
+/* Paleta ciberpunk naranja-negro */
+:root {
+  --negro: #181818;
+  --negro-card: #232323;
+  --naranja: #ff9100;
+  --naranja-oscuro: #ff6d00;
+  --blanco: #fff;
+}
+
+/* Fondo y layout */
+body {
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+
+main {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--negro-card);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #ff910033;
+}
+
+/* Título */
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--naranja);
+  text-shadow: 0 0 10px var(--naranja);
+  font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Tabla moderna */
+#tablaHistorial {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--negro-card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px #ff910033;
+}
+
+#tablaHistorial thead {
+  background: var(--naranja-oscuro);
+  color: var(--blanco);
+}
+
+#tablaHistorial th, #tablaHistorial td {
+  padding: 1rem 0.8rem;
+  text-align: center;
+}
+
+#tablaHistorial th {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+#tablaHistorial tbody tr {
+  transition: background 0.2s;
+}
+
+#tablaHistorial tbody tr:hover {
+  background: #222;
+}
+
+#tablaHistorial tbody td {
+  border-bottom: 1px solid #333;
+  color: #fff;
+}
+
+#tablaHistorial tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Monto positivo/negativo */
+#tablaHistorial td.monto-positivo {
+  color: #2eec71;
+  font-weight: bold;
+}
+#tablaHistorial td.monto-negativo {
+  color: var(--naranja-oscuro);
+  font-weight: bold;
+}
+
+/* Mensaje */
+#mensaje {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--naranja-oscuro);
+  font-size: 1.1em;
+}
+
+/* Footer */
+footer {
+  background: var(--negro-card);
+  color: var(--naranja);
+  text-align: center;
+  padding: 1.2rem 0 0.7rem 0;
+  margin-top: 2rem;
+  font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+  letter-spacing: 1px;
+  font-size: 1.1em;
+  box-shadow: 0 -2px 12px #ff910033;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  main {
+    padding: 1rem;
+  }
+  #tablaHistorial th, #tablaHistorial td {
+    padding: 0.5rem 0.2rem;
+    font-size: 0.95em;
+  }
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nueva Transacción - CryptoApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="Styles/transactionStyle.css" />
+</head>
+<body>
+  <header>
+    <h1>Crypto App</h1>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="historial.html">Historial</a>
+      <a href="dashboard.html">Análisis</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="login.html" onclick="logout()">Cerrar sesión</a>
+    </nav>
+  </header>
+  <main>
+    <div id="saldoContainer" style="margin-bottom: 20px;">
+  <strong>Saldo:</strong> $<span id="saldoPesos">0.00</span>
+  <button id="btnAgregarSaldo" class="btn-mas" title="Agregar saldo" style="font-size:1.2em; margin-left:10px;">+</button>
+</div>
+<div id="modalSaldo" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
+  <div style="background:#fff; padding:20px; border-radius:8px; min-width:250px;">
+    <h3>Agregar saldo</h3>
+    <form id="formAgregarSaldo">
+      <input type="number" id="inputSaldo" min="1" step="any" placeholder="Monto en pesos" required />
+      <button type="submit">Cargar</button>
+      <button type="button" id="cerrarModalSaldo">Cancelar</button>
+    </form>
+    <div id="mensajeSaldo"></div>
+  </div>
+</div>
+    <h2>Nueva Transacción</h2>
+    <form id="transactionForm">
+      <label for="action">Tipo de operación:</label>
+      <select id="action" required>
+        <option value="">Seleccione</option>
+        <option value="purchase">Compra</option>
+        <option value="sale">Venta</option>
+      </select>
+      <br />
+
+      <label for="crypto">Criptomoneda:</label>
+      <select id="crypto" required>
+        <option value="">Seleccione</option>
+        <option value="BTC">Bitcoin</option>
+        <option value="ETH">Ethereum</option>
+        <option value="USDC">USDC</option>
+      </select>
+      <br />
+
+      <label for="exchange">Exchange:</label>
+      <select id="exchange" required>
+        <option value="">Seleccione</option>
+        <option value="Binance">Binance</option>
+        <option value="Satoshitango">Satoshitango</option>
+        <option value="Buenbit">Buenbit</option>
+      </select>
+      <br />
+
+      <label for="amount">Cantidad:</label>
+      <input type="number" id="amount" min="0.00001" step="0.00000" required />
+      <span id="saldoCripto" style="margin-left:10px; color: #555;"></span>
+      <br />
+
+      <div id="moneyGroup" style="display:none;">
+        <label id="moneyLabel" for="money"></label>
+        <input type="text" id="money" readonly />
+      </div>
+      <br />
+
+      <label for="datetime">Fecha y hora:</label>
+      <input type="datetime-local" id="datetime" required />
+      <br />
+
+      <button type="submit">Guardar Transacción</button>
+    </form>
+    <div id="mensaje"></div>
+  </main>
+  <footer>
+    <p>&copy; 2025 - CryptoApp</p>
+  </footer>
+  <script src="Scripts/main.js"></script>
+  <script src="Scripts/transactionScript.js"></script>
+</body>
+</html>

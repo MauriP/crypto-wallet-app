@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard - Análisis de Wallet</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="Styles/dashboardStyle.css" />
+
+</head>
+<header>
+  <h1>Crypto App</h1>
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="historial.html">Historial</a>
+    <a href="transaction.html">Nueva Transacción</a>
+    <a href="perfil.html">Perfil</a>
+    <a href="login.html" onclick="logout()">Cerrar sesión</a>
+  </nav>
+<body>
+  <main class="dashboard-container">
+    <h2>Análisis de tu Wallet</h2>
+    <div id="wallet-summary">
+    <table id="wallet-table">
+        <thead>
+        <tr>
+            <th>Criptomoneda</th>
+            <th>Cantidad</th>
+            <th>Precio actual (ARS)</th>
+            <th>Valor en ARS</th>
+        </tr>
+        </thead>
+        <tbody id="wallet-tbody">
+        
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3" class="total-label">Total en ARS</td>
+            <td id="total-ars" class="total-value"></td>
+        </tr>
+        </tfoot>
+    </table>
+    </div>
+    <div id="mensaje" class="mensaje"></div>
+</main>
+    <script src="Scripts/dashboardScript.js"></script>
+    <script src="Scripts/main.js"></script>
+</body>
+</html>

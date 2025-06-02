@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Historial de Transacciones - CryptoApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="Styles/historialStyle.css" />
+</head>
+<body>
+  <header>
+    <h1>Crypto App</h1>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="transaction.html">Nueva Transacción</a>
+      <a href="dashboard.html">Análisis</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="login.html" onclick="logout()">Cerrar sesión</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Historial de Transacciones</h2>
+    <table id="tablaHistorial">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Cripto</th>
+          <th>Exchange</th>
+          <th>Cantidad</th>
+          <th>Monto (ARS)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Aquí se insertarán las filas dinámicamente -->
+      </tbody>
+    </table>
+    <div id="mensaje"></div>
+  </main>
+  <footer>
+    <p>&copy; 2025 - CryptoApp</p>
+  </footer>
+  <script src="Scripts/main.js"></script>
+  <script src="Scripts/historialScript.js"></script>
+</body>
+</html>
