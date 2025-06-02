@@ -1,0 +1,6 @@
+@ApiWallet_HostAddress = http://localhost:5041
+
+GET {{ApiWallet_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
