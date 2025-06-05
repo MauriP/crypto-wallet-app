@@ -11,6 +11,7 @@
             _logger = logger;
         }
 
+        // Me actualiza los precios de las crypto en la base de datos cada 30 segundos 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)

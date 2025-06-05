@@ -24,6 +24,7 @@ namespace ApiWallet.Services.Implemetaciones
             _jwtSecretKey = configuration.GetSection("jwt").Get<JwtSettings>()!;
         }
 
+        // Registrar un usuario, guardando su conntraseña hasheada
         public async Task<User> RegisterUserAsync(UserRegisterDto userDto)
         {
             var user = new User
@@ -38,6 +39,8 @@ namespace ApiWallet.Services.Implemetaciones
             await _context.SaveChangesAsync();
             return user;
         }
+
+        // Iniciar sesión de un usuario, verificando su contraseña hasheada y generando un token JWT
         public async Task<string?> LoginUserAsync(UserLoginDto userDto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == userDto.Username);
@@ -73,6 +76,7 @@ namespace ApiWallet.Services.Implemetaciones
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        // Actualizar un usuario, permitiendo cambiar su nombre de usuario, correo electrónico y contraseña
         public async Task<bool> UpdateUserAsync(int userId, UserUpdateDto userDto)
         {
             var user = await _context.Users.FindAsync(userId);

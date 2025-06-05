@@ -19,7 +19,7 @@ namespace ApiWallet.Controllers
             _logger = logger;
         }
 
-        // Crear una nueva transacción
+        // Crear una nueva transacción llamo al metodo CreateTransactionAsync del servicio
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] TransactionRequestDto request)
         {
@@ -39,7 +39,7 @@ namespace ApiWallet.Controllers
             }
         }
 
-        // Historial de transacciones de un usuario
+        // Historial de transacciones de un usuario, llamo al metodo GetUserTransactionsAsync del servicio
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserTransactions(int userId)
         {
@@ -55,7 +55,7 @@ namespace ApiWallet.Controllers
             }
         }
 
-        // Datos de una transaccion específica del usuario 
+        // Datos de una transaccion específica del usuario llamo al metodo GetTransactionByIdAsync del servicio
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTransactionById(int id)
         {
@@ -74,6 +74,7 @@ namespace ApiWallet.Controllers
             }
         }
 
+        
         [HttpGet("best-prices/{cryptoCode}")]
         public async Task<IActionResult> GetBestPrices(string cryptoCode, [FromQuery] string action)
         {
@@ -90,7 +91,7 @@ namespace ApiWallet.Controllers
         }
 
 
-        // Balance de una criptomone de un usuario
+        // Balance de una criptomoneda en espefico de un usuario llamo al metodo GetCryptoBalance del servicio
         [HttpGet("balance/{userId}/{cryptoCode}")]
         public async Task<IActionResult> GetCryptoBalance(int userId, string cryptoCode)
         {

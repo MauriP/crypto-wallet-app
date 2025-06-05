@@ -14,6 +14,7 @@ namespace ApiWallet.Controllers
             _balanceService = balanceService;
         }
 
+        // Obtiene el balance del usuario, utilizando el metodo GetUserBalanceAsync del BalanceService
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserBalance(int userId)
         {

@@ -15,6 +15,7 @@ namespace ApiWallet.Services.Implemetaciones
             _context = context;
         }
 
+        // Obtiene el saldo de un usuario, sumando o restando según las transacciones
         public async Task<UserPesosBalanceDto> GetBalanceAsync(int userId)
         {
             // Obtener el saldo base guardado (si existe)
@@ -44,6 +45,7 @@ namespace ApiWallet.Services.Implemetaciones
             };
         }
 
+        // Agrega o resta saldo del usuario, creando un nuevo registro si no existe
         public async Task<bool> AddBalanceAsync(int userId, decimal amount)
         {
             var balance = await _context.Set<UserPesosBalance>().FirstOrDefaultAsync(b => b.UserId == userId);
@@ -61,6 +63,7 @@ namespace ApiWallet.Services.Implemetaciones
             return true;
         }
 
+        // Para en un futuro, sirve para realizar una extracción de saldo del usuario
         public async Task<bool> SubtractBalanceAsync(int userId, decimal amount)
         {
             var balance = await _context.Set<UserPesosBalance>().FirstOrDefaultAsync(b => b.UserId == userId);

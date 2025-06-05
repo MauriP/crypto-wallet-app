@@ -21,6 +21,7 @@ namespace ApiWallet.Services.Implemetaciones
             _userPesosBalanceService = userPesosBalanceService;
         }
 
+        // Crear una transacción
         public async Task<TransactionCreateDto> CreateTransactionAsync(TransactionRequestDto request)
         {
             if (request.CryptoAmount <= 0)
@@ -69,8 +70,7 @@ namespace ApiWallet.Services.Implemetaciones
                 Action = request.Action,
                 CryptoAmount = request.CryptoAmount,
                 Money = totalMoney,
-                Datetime = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow
+                Datetime = request.datetime
             };
 
             _context.Transactions.Add(transaction);
@@ -85,10 +85,10 @@ namespace ApiWallet.Services.Implemetaciones
                 CryptoAmount = transaction.CryptoAmount,
                 Money = transaction.Money,
                 DateTime = transaction.Datetime,
-                CreatedAt = transaction.CreatedAt
             };
         }
 
+        // Obtener una transacción por ID
         public async Task<TransactionCreateDto?> GetTransactionByIdAsync(int id)
         {
             var transaction = await _context.Transactions
@@ -112,6 +112,7 @@ namespace ApiWallet.Services.Implemetaciones
             };
         }
 
+        // Obtener transacciones de un usuario
         public async Task<IEnumerable<TransactionCreateDto>> GetUserTransactionsAsync(int userId)
         {
             return await _context.Transactions
@@ -133,12 +134,14 @@ namespace ApiWallet.Services.Implemetaciones
                 .ToListAsync();
         }
 
+        // Obtener los mejores precios de compra o venta de una criptomoneda
         public async Task<IEnumerable<BestPriceDto>> GetBestPricesAsync(string cryptoCode, string action)
         {
             // Devuelve siempre los 3 exchanges, sin filtrar ni ordenar
             return await _cryptoYaApiClient.GetAllPrices(cryptoCode);
         }
 
+        // Obtener el estado del monedero de un usuario
         public async Task<IEnumerable<WalletStatusDto>> GetWalletStatusAsync(int userId)
         {
             var walletStatus = await _context.WalletStatusDto
@@ -164,6 +167,7 @@ namespace ApiWallet.Services.Implemetaciones
             return result;
         }
 
+        // Obtener el balance de una criptomoneda para un usuario
         public async Task<decimal> GetCryptoBalance(int userId, string cryptoCode)
         {
             try
@@ -214,6 +218,7 @@ namespace ApiWallet.Services.Implemetaciones
             }
         }
 
+        // Obtener el precio de compra de una criptomoneda en un exchange
         public async Task<decimal?> GetBuyPriceAsync(string cryptoCode, string exchangeCode)
         {
             var latestPrice = await _context.CryptoPrices
@@ -231,6 +236,7 @@ namespace ApiWallet.Services.Implemetaciones
             return await _cryptoYaApiClient.GetBuyPriceAsync(cryptoCode, exchangeCode);
         }
 
+        // Obtener el precio de venta de una criptomoneda en un exchange
         public async Task<decimal?> GetSellPriceAsync(string cryptoCode, string exchangeCode)
         {
             var latestPrice = await _context.CryptoPrices

@@ -13,10 +13,12 @@ namespace ApiWallet.Services.Implemetaciones
         {
             _context = context;
         }
+
+        //metodo que obtiene el balance total de un usuario, calculando su valor en pesos ARS, incluyendo el detalle de cada criptomoneda
         public async Task<UserTotalBalanceDto> GetUserBalanceAsync(int userId)
         {
             var results = await _context
-                .Set<VWalletSummary>()  // Esta entidad la definimos más abajo
+                .Set<VWalletSummary>()  
                 .Where(ws => ws.UserId == userId)
                 .ToListAsync();
 

@@ -75,7 +75,7 @@ namespace ApiWallet.Controllers
             }
         }
 
-        //Devolver información del usuario autenticado
+        //Obtener información del usuario autenticado
         [HttpGet("me")]
         [Authorize]
         public IActionResult GetCurrentUser()

@@ -15,6 +15,7 @@ namespace ApiWallet.Controllers
             _service = service;
         }
 
+        // Obtener el saldo de un usuario, usando el metodo GetBalanceAsync del servicio UserPesosBalanceService
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetBalance(int userId)
         {
@@ -22,6 +23,7 @@ namespace ApiWallet.Controllers
             return Ok(balance);
         }
 
+        // Agregar saldo a un usuario, usando el metodo AddBalanceAsync del servicio
         [HttpPost("add")]
         public async Task<IActionResult> AddBalance([FromBody] UserPesosBalanceDto dto)
         {

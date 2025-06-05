@@ -64,7 +64,7 @@ namespace ApiWallet.Services.Implemetaciones
                     return null;
                 }
 
-                // Intenta deserializar solo si el content-type es JSON
+                
                 if (!response.Content.Headers.ContentType?.MediaType.Contains("json") ?? true)
                 {
                     _logger.LogError("Respuesta no es JSON: {Content}", content);
@@ -72,7 +72,6 @@ namespace ApiWallet.Services.Implemetaciones
                 }
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, decimal>>(content);
-                // El precio de venta suele ser el precio "bid"
                 return dict != null && dict.ContainsKey("bid") ? dict["bid"] : null;
             }
             catch (Exception ex)
@@ -100,17 +99,17 @@ namespace ApiWallet.Services.Implemetaciones
                     results.Add(new BestPriceDto
                     {
                         ExchangeCode = ex,
-                        Price = price ?? 0, // Use null-coalescing operator to handle null
+                        Price = price ?? 0,
                         LastUpdate = DateTime.UtcNow
                     });
                 }
                 catch (Exception exErr)
                 {
-                    // Si falla, igual agrego el exchange con precio 0
+                    
                     results.Add(new BestPriceDto
                     {
                         ExchangeCode = ex,
-                        Price = 0, // Cambiado de null a 0 para evitar el error CS0037
+                        Price = 0, 
                         LastUpdate = DateTime.UtcNow
                     });
                     _logger.LogWarning(exErr, $"No se pudo obtener precio para {cryptoCode} en {ex}");
@@ -119,23 +118,6 @@ namespace ApiWallet.Services.Implemetaciones
             return results;
         }
 
-        private async Task<BestPriceDto> GetExchangePrice(string exchangeCode, string cryptoCode)
-        {
-            try
-            {
-                var response = await _httpClient.GetFromJsonAsync<Dictionary<string, decimal>>($"{exchangeCode}/{cryptoCode}/usd");
-
-                return new BestPriceDto
-                {
-                    ExchangeCode = exchangeCode,
-                    Price = (response["totalBid"] + response["totalAsk"]) / 2,
-                    LastUpdate = DateTime.UtcNow
-                };
-            }
-            catch
-            {
-                return null;
-            }
-        }
+        
     }
 }
