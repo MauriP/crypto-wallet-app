@@ -241,7 +241,15 @@ async function submitTransaction(e) {
   const crypto = document.getElementById('crypto').value;
   const exchange = document.getElementById('exchange').value;
   const amount = parseFloat(document.getElementById('amount').value);
-  const date = document.getElementById('datetime').value;
+
+  // Generar hora local correctamente
+  const now = new Date();
+  const date = now.getFullYear() + '-' +
+    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+    String(now.getDate()).padStart(2, '0') + 'T' +
+    String(now.getHours()).padStart(2, '0') + ':' +
+    String(now.getMinutes()).padStart(2, '0') + ':' +
+    String(now.getSeconds()).padStart(2, '0');
 
   const data = {
     UserId: parseInt(userId),
@@ -252,7 +260,6 @@ async function submitTransaction(e) {
     DateTime: date
   };
 
-  // LOG para depuración
   console.log("Datos enviados a /api/Transactions:", data);
 
   try {
@@ -265,7 +272,7 @@ async function submitTransaction(e) {
       body: JSON.stringify(data)
     });
 
-    let result = {};  
+    let result = {};
     let errorText = '';
     try {
       result = await res.json();

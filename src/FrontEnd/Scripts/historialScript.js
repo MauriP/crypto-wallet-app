@@ -8,7 +8,6 @@ if (!token) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Obtener usuario actual
   try {
     const res = await fetch(`${apiUrl}/User/me`, {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -45,19 +44,53 @@ async function cargarHistorial() {
     }
 
     transacciones.forEach(tx => {
-    const montoClass = tx.action === 'purchase' ? 'monto-compra' : 'monto-venta';
-  const fila = document.createElement('tr');
-  fila.innerHTML = `
-    <td>${new Date(tx.dateTime).toLocaleString()}</td>
-    <td>${tx.action === 'purchase' ? 'Compra' : 'Venta'}</td>
-    <td>${tx.cryptoCode}</td>
-    <td>${tx.exchangeCode}</td>
-    <td>${tx.cryptoAmount}</td>
-    <td>${tx.action === 'purchase' ? '-' : '+'}${parseFloat(tx.money).toFixed(2)}</td>
-  `;
-  tabla.appendChild(fila);
-});
+      const fila = document.createElement('tr');
+      fila.dataset.txId = tx.id;
+      fila.innerHTML = `
+        <td>${new Date(tx.dateTime).toLocaleString()}</td>
+        <td>${tx.action === 'purchase' ? 'Compra' : 'Venta'}</td>
+        <td>${tx.cryptoCode}</td>
+        <td>${tx.cryptoAmount}</td>
+      `;
+      fila.addEventListener('click', () => mostrarDetallesTransaccion(tx.id));
+      tabla.appendChild(fila);
+    });
+
   } catch (err) {
     mensaje.textContent = 'Error al cargar el historial.';
   }
 }
+
+async function mostrarDetallesTransaccion(id) {
+  try {
+    const res = await fetch(`${apiUrl}/Transactions/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) throw new Error('Error al obtener detalles');
+    const tx = await res.json();
+
+    document.getElementById('detalleFecha').textContent = new Date(tx.dateTime).toLocaleString();
+    document.getElementById('detalleTipo').textContent = tx.action === 'purchase' ? 'Compra' : 'Venta';
+    document.getElementById('detalleCripto').textContent = tx.cryptoCode;
+    document.getElementById('detalleExchange').textContent = tx.exchangeCode;
+    document.getElementById('detalleCantidad').textContent = tx.cryptoAmount;
+    document.getElementById('detalleMonto').textContent = parseFloat(tx.money).toFixed(2);
+
+    document.getElementById('modalTransaccion').style.display = 'block';
+
+  } catch (err) {
+    alert('Error al cargar los detalles de la transacción.');
+  }
+}
+
+// Cierre del modal
+document.querySelector('.cerrar').onclick = function () {
+  document.getElementById('modalTransaccion').style.display = 'none';
+};
+
+window.onclick = function (event) {
+  const modal = document.getElementById('modalTransaccion');
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+};
