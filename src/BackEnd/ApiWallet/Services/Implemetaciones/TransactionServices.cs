@@ -70,7 +70,7 @@ namespace ApiWallet.Services.Implemetaciones
                 Action = request.Action,
                 CryptoAmount = request.CryptoAmount,
                 Money = totalMoney,
-                Datetime = request.datetime
+                Datetime = request.DateTime
             };
 
             _context.Transactions.Add(transaction);
@@ -101,6 +101,7 @@ namespace ApiWallet.Services.Implemetaciones
 
             return new TransactionCreateDto
             {
+                Id = transaction.Id,
                 UserId = transaction.UserId,
                 CryptoCode = transaction.Crypto.Code,
                 ExchangeCode = transaction.Exchange?.Code,
@@ -122,6 +123,7 @@ namespace ApiWallet.Services.Implemetaciones
                 .OrderByDescending(t => t.Datetime)
                 .Select(t => new TransactionCreateDto
                 {
+                    Id = t.Id,
                     UserId = t.UserId,
                     CryptoCode = t.Crypto.Code,
                     ExchangeCode = t.Exchange.Code,

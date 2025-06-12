@@ -9,7 +9,7 @@ public class TransactionRequestDto
     public string Action { get; set; } // "purchase" o "sale"
     [Required]
     public decimal CryptoAmount { get; set; }
-    public DateTime datetime { get; set; } 
+    public DateTime DateTime { get; set; } 
 
 
 }
