@@ -1,0 +1,139 @@
+-- Tabla: users
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: cryptocurrencies
+CREATE TABLE `cryptocurrencies` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `code` varchar(10) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: exchanges
+CREATE TABLE `exchanges` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `code` varchar(20) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `api_url` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: crypto_prices
+CREATE TABLE `crypto_prices` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `crypto_id` int NOT NULL,
+  `exchange_id` int NOT NULL,
+  `buy_price` decimal(18,2) DEFAULT NULL,
+  `sell_price` decimal(18,2) DEFAULT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `crypto_id` (`crypto_id`),
+  KEY `exchange_id` (`exchange_id`),
+  KEY `idx_crypto_prices_last_updated` (`last_updated`),
+  CONSTRAINT `crypto_prices_ibfk_1` FOREIGN KEY (`crypto_id`) REFERENCES `cryptocurrencies` (`id`),
+  CONSTRAINT `crypto_prices_ibfk_2` FOREIGN KEY (`exchange_id`) REFERENCES `exchanges` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: transactions
+CREATE TABLE `transactions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `crypto_id` int NOT NULL,
+  `exchange_id` int DEFAULT NULL,
+  `action` enum('purchase','sale') NOT NULL,
+  `crypto_amount` decimal(18,8) NOT NULL,
+  `money` decimal(18,2) NOT NULL,
+  `datetime` datetime NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `exchange_id` (`exchange_id`),
+  KEY `idx_transactions_user` (`user_id`),
+  KEY `idx_transactions_crypto` (`crypto_id`),
+  KEY `idx_transactions_datetime` (`datetime`),
+  CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `transactions_ibfk_2` FOREIGN KEY (`crypto_id`) REFERENCES `cryptocurrencies` (`id`),
+  CONSTRAINT `transactions_ibfk_3` FOREIGN KEY (`exchange_id`) REFERENCES `exchanges` (`id`),
+  CONSTRAINT `transactions_chk_1` CHECK ((`crypto_amount` > 0))
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: userpesosbalances
+CREATE TABLE `userpesosbalances` (
+  `UserId` int NOT NULL,
+  `PesosBalance` decimal(18,2) NOT NULL,
+  PRIMARY KEY (`UserId`),
+  CONSTRAINT `FK_UserPesosBalances_Users` FOREIGN KEY (`UserId`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Vista: wallet_status
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `wallet_status` AS
+SELECT
+  `t`.`user_id` AS `user_id`,
+  `c`.`code` AS `crypto_code`,
+  `c`.`name` AS `crypto_name`,
+  SUM(
+    CASE
+      WHEN (`t`.`action` = 'purchase') THEN `t`.`crypto_amount`
+      ELSE -(`t`.`crypto_amount`)
+    END
+  ) AS `total_amount`
+FROM `transactions` `t`
+JOIN `cryptocurrencies` `c` ON (`t`.`crypto_id` = `c`.`id`)
+GROUP BY `t`.`user_id`, `c`.`code`, `c`.`name`
+HAVING (`total_amount` > 0);
+
+-- Vista: v_wallet_summary
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_wallet_summary` AS
+SELECT
+  `ws`.`user_id` AS `user_id`,
+  `ws`.`crypto_code` AS `crypto_code`,
+  `ws`.`crypto_name` AS `crypto_name`,
+  `ws`.`total_amount` AS `total_amount`,
+  (
+    SELECT `cp`.`sell_price`
+    FROM `crypto_prices` `cp`
+    JOIN `cryptocurrencies` `c` ON (`cp`.`crypto_id` = `c`.`id`)
+    WHERE (`c`.`code` = `ws`.`crypto_code`)
+    ORDER BY `cp`.`last_updated` DESC
+    LIMIT 1
+  ) AS `current_price`,
+  (
+    `ws`.`total_amount` *
+    (
+      SELECT `cp`.`sell_price`
+      FROM `crypto_prices` `cp`
+      JOIN `cryptocurrencies` `c` ON (`cp`.`crypto_id` = `c`.`id`)
+      WHERE (`c`.`code` = `ws`.`crypto_code`)
+      ORDER BY `cp`.`last_updated` DESC
+      LIMIT 1
+    )
+  ) AS `current_value`
+FROM `wallet_status` `ws`;
+
+-- Vista: v_transaction_history
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_transaction_history` AS
+SELECT
+  `t`.`id` AS `id`,
+  `t`.`user_id` AS `user_id`,
+  `c`.`code` AS `crypto_code`,
+  `c`.`name` AS `crypto_name`,
+  `e`.`code` AS `exchange_code`,
+  `e`.`name` AS `exchange_name`,
+  `t`.`action` AS `action`,
+  `t`.`crypto_amount` AS `crypto_amount`,
+  `t`.`money` AS `money`,
+  `t`.`datetime` AS `datetime`,
+  `t`.`created_at` AS `created_at`
+FROM `transactions` `t`
+JOIN `cryptocurrencies` `c` ON (`t`.`crypto_id` = `c`.`id`)
+LEFT JOIN `exchanges` `e` ON (`t`.`exchange_id` = `e`.`id`)
+ORDER BY `t`.`datetime` DESC;
