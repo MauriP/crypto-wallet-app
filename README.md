@@ -52,17 +52,12 @@ vez de un campo de balance que podría desincronizarse:
   nombres de criptomoneda y exchange ya resueltos (sin necesidad de
   hacer los JOIN desde la aplicación).
 
-## Cómo ejecutar localmente
-
-> ⚠️ Completar esta sección con la estructura real del proyecto — no
-> pude inspeccionar el contenido de `src/` para confirmar nombres
-> exactos de archivos y carpetas.
 
 ### Requisitos
 
 - .NET SDK (verificar versión en el `.csproj` dentro de `src/`)
 - MySQL Server accesible localmente
-- Una cuenta / acceso a la API de CryptoYa (verificar si requiere API key)
+- Una cuenta / acceso a la API de CryptoYa 
 
 ### Pasos
 
